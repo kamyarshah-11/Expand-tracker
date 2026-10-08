@@ -40,11 +40,13 @@ function adding() {
 
   row.appendChild(options);
   resetInput();
+  calculateTotals();
 }
 
 function deleteBtn(element) {
   element.parentElement.parentElement.remove();
   updateRowNumber();
+  calculateTotals();
 }
 
 function updateRowNumber() {
@@ -53,6 +55,7 @@ function updateRowNumber() {
   for (let i = 1; i < rows.length; i++) {
     rows[i].cells[0].textContent = i;
   }
+  calculateTotals();
 }
 
 function resetInput() {
@@ -69,6 +72,28 @@ function editting(element) {
   descriptionInp.value = row.cells[3].textContent;
 
   deleteBtn(element);
+  calculateTotals();
+}
+
+function calculateTotals() {
+  let totalIncome = 0;
+  let totalPayed = 0;
+
+  document.querySelectorAll("#table tr.income").forEach((row) => {
+    const amount = parseFloat(row.cells[2].textContent);
+    totalIncome += amount;
+  });
+
+  document.querySelectorAll("#table tr.payed").forEach((row) => {
+    const amount = parseFloat(row.cells[2].textContent);
+    totalPayed += Math.abs(amount);
+  });
+
+  const total = totalIncome - totalPayed;
+
+  document.getElementById("totalIncome").textContent = totalIncome;
+  document.getElementById("totalPayed").textContent = totalPayed;
+  document.getElementById("total").textContent = total;
 }
 
 const table = document.getElementById("table");
@@ -76,3 +101,5 @@ const nameInp = document.getElementById("nameInp");
 const amountInp = document.getElementById("amountInp");
 const descriptionInp = document.getElementById("descriptionInp");
 const select = document.getElementById("selected");
+
+calculateTotals();
