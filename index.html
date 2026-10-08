@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expand Tracker</title>
+    <link rel="stylesheet" href="./styles/style.css">
+</head>
+
+<body>
+    <div class="upper">
+        <h1>Expand Tracker for your income and Expence</h1>
+        <button id="theme">Light Mode</button>
+    </div>
+    <main>
+        <table id="table">
+            <tr>
+                <th>number</th>
+                <th>name</th>
+                <th>income/payed</th>
+                <th>discription</th>
+                <th>options</th>
+            </tr>
+
+            <tr class="payed">
+                <td>1</td>
+                <td>taxi</td>
+                <td>-100</td>
+                <td>taxi from uni to dormitory</td>
+                <td><button onclick="editting(this)">Edit</button> <button onclick="deleteBtn(this)">delete</button>
+                </td>
+            </tr>
+
+            <tr class="payed">
+                <td>2</td>
+                <td>food</td>
+                <td>-400</td>
+                <td>lunch 1 dish of kabab</td>
+                <td><button onclick="editting(this)">Edit</button> <button onclick="deleteBtn(this)">delete</button>
+                </td>
+            </tr>
+
+            <tr class="income">
+                <td>3</td>
+                <td>salery</td>
+                <td>+4100</td>
+                <td>salery of last month</td>
+                <td><button onclick="editting(this)">Edit</button> <button onclick="deleteBtn(this)">delete</button>
+                </td>
+            </tr>
+        </table>
+    </main>
+    <div class="adding">
+
+        <label for="nameInp">name : </label><input type="text" id="nameInp"><br>
+        <label for="amountInp">Amount : </label><input type="number" id="amountInp" min="0"><br>
+        <label for="description">description</label><input type="text" id="descriptionInp"><br>
+        <select name="" id="selected">
+            <option value="income">income</option>
+            <option value="payed">payed</option>
+        </select>
+        <button id="addBtn" onclick="adding()">add</button>
+    </div>
+
+
+    <script src="./script/app.js"></script>
+
+</body>
+
+</html>
