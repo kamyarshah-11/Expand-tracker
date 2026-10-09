@@ -9,6 +9,20 @@ const select = document.getElementById("selected");
 const themeBtn = document.getElementById("theme");
 
 // =========================
+// LOCAL STORAGE
+// =========================
+
+let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
+
+// =========================
+// SAVE DATA
+// =========================
+
+function saveTransactions() {
+  localStorage.setItem("transactions", JSON.stringify(transactions));
+}
+
+// =========================
 // ADD
 // =========================
 
@@ -22,29 +36,60 @@ function adding() {
     !descriptionInp.value.trim()
   ) {
     alert("Please fill all the blanks and choose one of the options");
+
     return;
   }
 
+  const transaction = {
+    name: nameInp.value.trim(),
+
+    amount: Number(amountInp.value),
+
+    description: descriptionInp.value.trim(),
+
+    type: select.value,
+  };
+
+  // Add to array
+  transactions.push(transaction);
+
+  // Save to localStorage
+  saveTransactions();
+
+  // Add row to table
+  createRow(transaction);
+
+  resetInput();
+
+  calculateTotals();
+}
+
+// =========================
+// CREATE TABLE ROW
+// =========================
+
+function createRow(transaction) {
   const row = table.insertRow();
 
   // Number
-  row.insertCell(0).textContent = table.rows.length - 1;
+  row.insertCell(0).textContent = table.rows.length;
 
   // Name
-  row.insertCell(1).textContent = nameInp.value;
+  row.insertCell(1).textContent = transaction.name;
 
   // Amount
   row.insertCell(2).textContent =
-    select.value === "payed" ? `-${amountInp.value}` : `+${amountInp.value}`;
+    transaction.type === "payed"
+      ? `-${transaction.amount}`
+      : `+${transaction.amount}`;
 
-  row.insertCell(3).textContent = descriptionInp.value;
+  // Description
+  row.insertCell(3).textContent = transaction.description;
 
-  if (select.value === "payed") {
-    row.classList.add("payed");
-  } else {
-    row.classList.add("income");
-  }
+  // Row type
+  row.classList.add(transaction.type === "payed" ? "payed" : "income");
 
+  // Edit button
   const edit = document.createElement("button");
 
   edit.textContent = "Edit";
@@ -53,6 +98,7 @@ function adding() {
     editting(this);
   };
 
+  // Delete button
   const Delete = document.createElement("button");
 
   Delete.textContent = "Delete";
@@ -61,16 +107,13 @@ function adding() {
     deleteBtn(this);
   };
 
+  // Options
   const options = document.createElement("td");
 
   options.appendChild(edit);
   options.appendChild(Delete);
 
   row.appendChild(options);
-
-  resetInput();
-
-  calculateTotals();
 }
 
 // =========================
@@ -78,7 +121,18 @@ function adding() {
 // =========================
 
 function deleteBtn(element) {
-  element.parentElement.parentElement.remove();
+  const row = element.parentElement.parentElement;
+
+  const rowIndex = row.rowIndex - 1;
+
+  // Remove from array
+  transactions.splice(rowIndex, 1);
+
+  // Save updated array
+  saveTransactions();
+
+  // Remove from table
+  row.remove();
 
   updateRowNumber();
 
@@ -103,7 +157,9 @@ function updateRowNumber() {
 
 function resetInput() {
   nameInp.value = "";
+
   amountInp.value = "";
+
   descriptionInp.value = "";
 
   select.value = "income";
@@ -116,20 +172,30 @@ function resetInput() {
 function editting(element) {
   const row = element.parentElement.parentElement;
 
-  nameInp.value = row.cells[1].textContent;
+  const rowIndex = row.rowIndex - 1;
 
-  amountInp.value = row.cells[2].textContent.slice(1);
+  const transaction = transactions[rowIndex];
 
-  descriptionInp.value = row.cells[3].textContent;
+  nameInp.value = transaction.name;
 
-  // Detect transaction type
-  if (row.classList.contains("payed")) {
-    select.value = "payed";
-  } else {
-    select.value = "income";
-  }
+  amountInp.value = transaction.amount;
 
-  deleteBtn(element);
+  descriptionInp.value = transaction.description;
+
+  select.value = transaction.type;
+
+  // Remove old transaction
+  transactions.splice(rowIndex, 1);
+
+  // Save changes
+  saveTransactions();
+
+  // Remove old row
+  row.remove();
+
+  updateRowNumber();
+
+  calculateTotals();
 
   nameInp.focus();
 }
@@ -143,16 +209,12 @@ function calculateTotals() {
 
   let totalPayed = 0;
 
-  document.querySelectorAll("#table tr.income").forEach((row) => {
-    const amount = parseFloat(row.cells[2].textContent);
-
-    totalIncome += amount;
-  });
-
-  document.querySelectorAll("#table tr.payed").forEach((row) => {
-    const amount = parseFloat(row.cells[2].textContent);
-
-    totalPayed += Math.abs(amount);
+  transactions.forEach((transaction) => {
+    if (transaction.type === "income") {
+      totalIncome += transaction.amount;
+    } else {
+      totalPayed += transaction.amount;
+    }
   });
 
   const total = totalIncome - totalPayed;
@@ -162,6 +224,16 @@ function calculateTotals() {
   document.getElementById("totalPayed").textContent = totalPayed;
 
   document.getElementById("total").textContent = total;
+}
+
+// =========================
+// LOAD TRANSACTIONS
+// =========================
+
+function loadTransactions() {
+  transactions.forEach((transaction) => {
+    createRow(transaction);
+  });
 }
 
 // =========================
@@ -185,7 +257,7 @@ function changeTheme() {
 }
 
 // =========================
-// LOAD SAVED THEME
+// LOAD THEME
 // =========================
 
 function loadTheme() {
@@ -207,5 +279,7 @@ function loadTheme() {
 // =========================
 
 loadTheme();
+
+loadTransactions();
 
 calculateTotals();
