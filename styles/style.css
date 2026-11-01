@@ -1,31 +1,44 @@
-/* =========================
-   VARIABLES
-========================= */
+/* =========================================================
+   Expense Tracker — style.css
+   ========================================================= */
 
+/* ---------- Design tokens ---------- */
 :root {
+  color-scheme: light;
+
   --bg: #f4f7fb;
   --card: #ffffff;
   --text: #172033;
-  --muted: #6b7280;
-  --border: #e5e7eb;
+  --muted: #64748b;
+  --border: #e2e8f0;
 
   --primary: #2563eb;
   --primary-hover: #1d4ed8;
+  --primary-soft: rgba(37, 99, 235, 0.12);
 
   --income: #16a34a;
-  --income-light: #dcfce7;
+  --income-hover: #15803d;
+  --income-soft: #dcfce7;
 
   --expense: #dc2626;
-  --expense-light: #fee2e2;
+  --expense-hover: #b91c1c;
+  --expense-soft: #fee2e2;
+
+  --neutral: #64748b;
+  --neutral-hover: #475569;
 
   --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+
+  --ease: 0.2s ease;
 }
 
-/* =========================
-   DARK MODE
-========================= */
-
 body.dark {
+  color-scheme: dark;
+
   --bg: #0f172a;
   --card: #172033;
   --text: #f8fafc;
@@ -34,21 +47,23 @@ body.dark {
 
   --primary: #3b82f6;
   --primary-hover: #60a5fa;
+  --primary-soft: rgba(59, 130, 246, 0.18);
 
   --income: #22c55e;
-  --income-light: rgba(34, 197, 94, 0.16);
+  --income-hover: #16a34a;
+  --income-soft: rgba(34, 197, 94, 0.16);
 
   --expense: #ef4444;
-  --expense-light: rgba(239, 68, 68, 0.16);
+  --expense-hover: #dc2626;
+  --expense-soft: rgba(239, 68, 68, 0.16);
 
-  --shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+  --shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
 }
 
-/* =========================
-   GENERAL
-========================= */
-
-* {
+/* ---------- Base ---------- */
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
@@ -68,6 +83,7 @@ body {
     BlinkMacSystemFont,
     "Segoe UI",
     sans-serif;
+  line-height: 1.5;
 
   background: var(--bg);
   color: var(--text);
@@ -87,36 +103,36 @@ button {
   cursor: pointer;
 }
 
-.container {
-  width: min(1200px, 100%);
-  margin: auto;
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
 }
 
-/* =========================
-   HEADER
-========================= */
+.container {
+  width: min(1200px, 100%);
+  margin-inline: auto;
+}
 
+/* ---------- Header ---------- */
 .upper {
   display: flex;
   justify-content: space-between;
   align-items: center;
-
   gap: 25px;
   margin-bottom: 30px;
 }
 
 .title-area h1 {
   margin: 7px 0 5px;
-
   font-size: clamp(2rem, 4vw, 3rem);
   font-weight: 800;
   letter-spacing: -1px;
+  line-height: 1.1;
 }
 
 .title-area p {
   margin: 0;
   color: var(--muted);
-  font-size: 1rem;
 }
 
 .badge,
@@ -127,28 +143,20 @@ button {
   letter-spacing: 1.5px;
 }
 
-/* =========================
-   THEME BUTTON
-========================= */
-
 .theme-btn {
-  border: 1px solid var(--border);
+  padding: 11px 17px;
 
   background: var(--card);
   color: var(--text);
-
-  padding: 11px 17px;
-
+  border: 1px solid var(--border);
   border-radius: 12px;
 
   font-weight: 600;
-
   box-shadow: var(--shadow);
 
   transition:
-    transform 0.2s ease,
-    background 0.2s ease,
-    border 0.2s ease;
+    transform var(--ease),
+    border-color var(--ease);
 }
 
 .theme-btn:hover {
@@ -157,18 +165,14 @@ button {
 }
 
 .theme-btn:active {
-  transform: translateY(0);
+  transform: none;
 }
 
-/* =========================
-   SUMMARY
-========================= */
-
+/* ---------- Summary cards ---------- */
 .summary {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 18px;
-
   margin-bottom: 25px;
 }
 
@@ -176,19 +180,14 @@ button {
   display: flex;
   align-items: center;
   gap: 15px;
-
-  background: var(--card);
-
-  border: 1px solid var(--border);
-  border-radius: 18px;
-
   padding: 22px;
 
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
   box-shadow: var(--shadow);
 
-  transition:
-    transform 0.2s ease,
-    border 0.2s ease;
+  transition: transform var(--ease);
 }
 
 .summary-card:hover {
@@ -196,8 +195,7 @@ button {
 }
 
 .summary-card p {
-  margin: 0 0 7px;
-
+  margin: 0 0 4px;
   color: var(--muted);
   font-size: 0.85rem;
   font-weight: 600;
@@ -205,76 +203,68 @@ button {
 
 .summary-card h2 {
   margin: 0;
-
   font-size: 1.7rem;
+  font-variant-numeric: tabular-nums;
 }
 
 .summary-icon {
+  flex-shrink: 0;
   width: 48px;
   height: 48px;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  place-items: center;
 
-  border-radius: 14px;
-
+  border-radius: var(--radius-md);
   font-size: 1.5rem;
   font-weight: 800;
 }
 
 .income-card .summary-icon {
-  background: var(--income-light);
+  background: var(--income-soft);
   color: var(--income);
 }
 
 .payed-card .summary-icon {
-  background: var(--expense-light);
+  background: var(--expense-soft);
   color: var(--expense);
 }
 
 .total-card .summary-icon {
-  background: rgba(37, 99, 235, 0.12);
+  background: var(--primary-soft);
   color: var(--primary);
 }
 
-/* =========================
-   ADDING CARD
-========================= */
-
-.adding {
-  background: var(--card);
-
-  border: 1px solid var(--border);
-  border-radius: 20px;
-
+/* ---------- Cards (form + table) ---------- */
+.adding,
+.table-card {
   padding: 25px;
 
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
   box-shadow: var(--shadow);
+}
 
+.adding {
   margin-bottom: 25px;
 }
 
-.section-title {
+.section-title,
+.table-header {
   margin-bottom: 22px;
 }
 
 .section-title h2,
 .table-header h2 {
   margin: 5px 0 0;
-
   font-size: 1.3rem;
 }
 
+/* ---------- Form ---------- */
 .form-grid {
   display: grid;
-
-  grid-template-columns:
-    1fr
-    1fr
-    1.5fr
-    1fr;
-
+  grid-template-columns: 1fr 1fr 1.5fr 1fr;
   gap: 16px;
 }
 
@@ -287,28 +277,21 @@ button {
 .input-group label {
   font-size: 0.85rem;
   font-weight: 700;
-
-  color: var(--text);
 }
 
 .input-group input,
 .input-group select {
   width: 100%;
-
-  border: 1px solid var(--border);
-  border-radius: 11px;
+  padding: 12px 13px;
 
   background: var(--bg);
   color: var(--text);
-
-  padding: 12px 13px;
-
-  outline: none;
+  border: 1px solid var(--border);
+  border-radius: 11px;
 
   transition:
-    border 0.2s ease,
-    box-shadow 0.2s ease,
-    background 0.2s ease;
+    border-color var(--ease),
+    box-shadow var(--ease);
 }
 
 .input-group input::placeholder {
@@ -317,195 +300,181 @@ button {
 
 .input-group input:focus,
 .input-group select:focus {
+  outline: none;
   border-color: var(--primary);
-
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+  box-shadow: 0 0 0 3px var(--primary-soft);
 }
 
-/* =========================
-   ADD BUTTON
-========================= */
-
-#addBtn {
+/* ---------- Action buttons ---------- */
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
   margin-top: 20px;
+}
+
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 12px 22px;
 
   border: none;
   border-radius: 11px;
+  color: #fff;
 
-  background: var(--primary);
-  color: white;
-
-  padding: 12px 22px;
-
+  font-size: 0.9rem;
   font-weight: 700;
 
   transition:
-    background 0.2s ease,
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
+    background var(--ease),
+    transform var(--ease),
+    box-shadow var(--ease);
 }
 
-#addBtn:hover {
-  background: var(--primary-hover);
+.action-btn span {
+  font-size: 1.1rem;
+  font-weight: 800;
+  line-height: 1;
+}
 
+.action-btn:hover {
   transform: translateY(-2px);
+}
 
+.action-btn:active {
+  transform: none;
+  box-shadow: none;
+}
+
+.action-btn[hidden] {
+  display: none;
+}
+
+.add-btn {
+  background: var(--primary);
+}
+
+.add-btn:hover {
+  background: var(--primary-hover);
   box-shadow: 0 8px 20px rgba(37, 99, 235, 0.25);
 }
 
-#addBtn:active {
-  transform: translateY(0);
+/* Applied by JS while editing */
+.add-btn.update-btn {
+  background: var(--income);
 }
 
-/* =========================
-   TABLE CARD
-========================= */
-
-.table-card {
-  background: var(--card);
-
-  border: 1px solid var(--border);
-  border-radius: 20px;
-
-  padding: 25px;
-
-  box-shadow: var(--shadow);
+.add-btn.update-btn:hover {
+  background: var(--income-hover);
+  box-shadow: 0 8px 20px rgba(22, 163, 74, 0.25);
 }
 
-.table-header {
-  margin-bottom: 20px;
+.cancel-btn {
+  background: var(--neutral);
 }
 
+.cancel-btn:hover {
+  background: var(--neutral-hover);
+  box-shadow: 0 8px 20px rgba(100, 116, 139, 0.25);
+}
+
+/* ---------- Table ---------- */
 .table-wrapper {
   width: 100%;
   overflow-x: auto;
-
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: var(--radius-md);
 }
-
-/* =========================
-   TABLE
-========================= */
 
 table {
   width: 100%;
-
   min-width: 750px;
-
   border-collapse: collapse;
-
   font-size: 0.95rem;
 }
 
 th,
 td {
   padding: 15px 14px;
-
   text-align: left;
-
-  border-bottom: 1px solid rgba(128, 128, 128, 0.15);
+  border-bottom: 1px solid var(--border);
 }
 
 th {
   background: var(--bg);
-
   color: var(--muted);
-
   font-size: 0.75rem;
-
-  text-transform: uppercase;
-
-  letter-spacing: 0.7px;
-
   font-weight: 800;
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
 }
 
-tr:last-child td {
+tbody tr:last-child td {
   border-bottom: none;
 }
 
-/* =========================
-   INCOME / EXPENSE ROWS
-========================= */
+td:nth-child(3) {
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Income / expense rows (class set by JS on <tr>) */
+tr.income {
+  background: var(--income-soft);
+}
 
 tr.payed {
-  background: var(--expense-light);
-
-  color: var(--text);
-
-  border-left: 4px solid var(--expense);
+  background: var(--expense-soft);
 }
 
-tr.income {
-  background: var(--income-light);
-
-  color: var(--text);
-
-  border-left: 4px solid var(--income);
+/* Coloured edge: inset shadow works reliably with border-collapse */
+tr.income td:first-child {
+  box-shadow: inset 4px 0 0 var(--income);
 }
 
-tr.payed td:nth-child(3) {
-  color: var(--expense);
-
-  font-weight: 800;
+tr.payed td:first-child {
+  box-shadow: inset 4px 0 0 var(--expense);
 }
 
 tr.income td:nth-child(3) {
   color: var(--income);
-
-  font-weight: 800;
 }
 
-/* =========================
-   TABLE BUTTONS
-========================= */
+tr.payed td:nth-child(3) {
+  color: var(--expense);
+}
 
-.payed button,
-.income button {
-  border: none;
-
+/* Row buttons: Edit (first) and Delete (last) */
+td:last-child button {
+  margin: 3px;
   padding: 7px 12px;
 
-  margin: 3px;
-
+  border: none;
   border-radius: 8px;
-
-  background: #2563eb;
-  color: white;
+  background: var(--primary);
+  color: #fff;
 
   font-size: 0.8rem;
   font-weight: 700;
 
   transition:
-    transform 0.2s ease,
-    opacity 0.2s ease;
+    transform var(--ease),
+    opacity var(--ease);
 }
 
-.payed button:hover,
-.income button:hover {
+td:last-child button:last-child {
+  background: var(--expense);
+}
+
+td:last-child button:hover {
   transform: translateY(-1px);
   opacity: 0.85;
 }
 
-/* Delete button */
-
-.payed button:last-child,
-.income button:last-child {
-  background: #dc2626;
-}
-
-/* Edit button */
-
-.payed button:first-child,
-.income button:first-child {
-  background: #2563eb;
-}
-
-/* =========================
-   RESPONSIVE
-========================= */
-
+/* ---------- Responsive ---------- */
 @media (max-width: 900px) {
   .form-grid {
     grid-template-columns: 1fr 1fr;
@@ -522,9 +491,8 @@ tr.income td:nth-child(3) {
   }
 
   .upper {
-    align-items: flex-start;
-
     flex-direction: column;
+    align-items: flex-start;
   }
 
   .theme-btn {
@@ -540,11 +508,26 @@ tr.income td:nth-child(3) {
     padding: 18px;
   }
 
-  .title-area h1 {
-    font-size: 2rem;
-  }
-
   .summary-card h2 {
     font-size: 1.4rem;
+  }
+
+  .form-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .action-btn {
+    width: 100%;
+  }
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    scroll-behavior: auto !important;
   }
 }

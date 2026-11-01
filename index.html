@@ -104,10 +104,19 @@
             </div>
 
 
-            <button id="addBtn" onclick="adding()">
-                <span>＋</span>
-                Add Transaction
-            </button>
+            <div class="form-actions">
+
+                <button id="addBtn" class="action-btn add-btn" onclick="adding()">
+                    <span>＋</span>
+                    Add Transaction
+                </button>
+
+                <button id="cancelBtn" class="action-btn cancel-btn" onclick="cancelEdit()" hidden>
+                    <span>✕</span>
+                    Cancel Edit
+                </button>
+
+            </div>
 
         </section>
 
@@ -125,10 +134,18 @@
 
             <div class="table-wrapper">
 
-                <table id="table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Amount</th>
+                            <th>Description</th>
+                            <th>Options</th>
+                        </tr>
+                    </thead>
 
-
-
+                    <tbody id="table"></tbody>
                 </table>
 
             </div>
